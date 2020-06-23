@@ -112,7 +112,11 @@
 
 		<?php 
 		}
-		echo"</table>";
+		?>
+		</table>
+		</form>
+		<?php  
+		
 		
 	}
 	add_shortcode('project_information_table','display_table');
@@ -139,6 +143,7 @@
 			<?php else: ?>
 				<button type="submit" name="save" >Save</button>
 			<?php endif ?>
+		</form>
 	
 		<?php  
 
