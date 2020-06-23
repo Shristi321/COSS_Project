@@ -19,14 +19,12 @@
 
 	global $wpdb; 
 
-
 	if (isset($_POST['update'])) {
-		$id = $_POST['id'];
+		$id=$_POST['update'];
 		$projectTitle = $_POST['projectTitle'];
 		$projectAbstract = $_POST['projectAbstract'];
 
 		$wpdb->get_results("UPDATE project_information SET projectTitle='$projectTitle', projectAbstract='$projectAbstract' WHERE id=$id"); 
-		//header('location: page_id=530');
 	}
 
 
@@ -35,7 +33,7 @@
 		$projectAbstract = $_POST['projectAbstract'];
 
 		$wpdb->get_results("INSERT INTO project_information (projectTitle, projectAbstract) VALUES ('$projectTitle', '$projectAbstract')"); 
-		//header('location: page_id=530');
+		
 	}
 
 
@@ -54,11 +52,8 @@
 				array(
 					'id'=>$_POST['delete']
 				)
-
 			);
-
 		}
-
 
 		if (isset($_POST['edit'])){
 			$update = true;
@@ -116,7 +111,11 @@
 	function project_information_form()
 	{
 
+		
+
 		?>
+
+
 
 		<form method="post" action="?page_id=530">
 			<input type="hidden" name="id" value="<?php echo $id; ?>">
@@ -130,10 +129,11 @@
 			
 
 
-			<?php if ($update == true): ?>
-				<button  type="submit" name="update" >Update</button>
+			<?php if ($update == true): ?><!-- ?????????<?php //if ($update == false): ?> -->
+
+				<button  type="submit" name="save" ?>">Save</button>
 			<?php else: ?>
-				<button type="submit" name="save" >Save</button>
+				<button type="submit" name="update" value="<?php echo $_POST[0]->id; ?>">Update</button>
 			<?php endif ?>
 		</form>
 	
