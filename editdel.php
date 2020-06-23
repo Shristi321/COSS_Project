@@ -1,8 +1,9 @@
  <?php
 /**
-*Plugin Name: Edit Test Plugin
-*Description: This is just an example plugin
+*Plugin Name: COSS Abstract Submission Plugin
+*Description: This is used for editing, deleting and updating the table.
 *Version: 1.0
+*Author: Shristi and Dr. Axvig
 **/?>
 
 <?php 
