@@ -74,12 +74,7 @@
 			$id = $_POST['edit'];
 			echo "$id";
 			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
-			echo "<tr>";
-			echo "<td>";
-			 echo $obj->projectTitle; echo"</td>";
-			echo"<td>"; echo $obj->projectAbstract; echo" </td>";
-			
-			echo "</tr>";
+			echo "<pre>";print_r($rec); echo "</pre>";
 			
 			// echo $_POST['projectTitle'];//$rec->projectTitle???????
 			// echo $rec->projectAbstract;  //$rec->projectAbstract???????
