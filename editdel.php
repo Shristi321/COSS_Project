@@ -14,27 +14,19 @@
 	$update = false;
 	?>
 
-
 	<?php 
 
 	global $wpdb; 
-	if (array_key_exists('edit',$_GET))
-		{
-		$id = $_GET['edit'];
-		$update = true;
-		$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
+	// if (isset($_GET['edit'])){
+	// 	$id = $_GET['edit'];
+	// 	$update = true;
+	// 	$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
+		               
+	// 		$projectTitle =  $_POST['projectTitle'];//$rec->projectTitle???????
+	// 		$projectAbstract = $rec->projectAbstract;//$rec->projectAbstract???????
+	// 		$id= $rec['id'];
+	// }
 
-			
-			$projectTitle = $rec['projectTitle'];//$rec->projectTitle???????
-			$projectAbstract = $rec['projectAbstract'];//$rec->projectAbstract???????
-			$id= $record['id'];
-	}
-
-	if (isset($_POST['del'])) {
-		$id = $_POST['id'];
-		$wpdb->get_results("DELETE FROM project_information WHERE id=$id");
-		header('location: page_id=530');
-	}
 
 	if (isset($_POST['update'])) {
 		$id = $_POST['id'];
@@ -42,16 +34,16 @@
 		$projectAbstract = $_POST['projectAbstract'];
 
 		$wpdb->get_results("UPDATE project_information SET projectTitle='$projectTitle', projectAbstract='$projectAbstract' WHERE id=$id"); 
-		header('location: page_id=530');
+		//header('location: page_id=530');
 	}
 
 
-	if (isset($_POST['submit'])) {
+	if (isset($_POST['save'])) {
 		$projectTitle = $_POST['projectTitle'];
 		$projectAbstract = $_POST['projectAbstract'];
 
 		$wpdb->get_results("INSERT INTO project_information (projectTitle, projectAbstract) VALUES ('$projectTitle', '$projectAbstract')"); 
-		header('location: page_id=530');
+		//header('location: page_id=530');
 	}
 
 
@@ -64,9 +56,41 @@
 	function display_table()
 	{
 		global $wpdb;
-		$result = $wpdb->get_results(" SELECT * FROM project_information");
-		?>
 
+		if(isset($_POST['delete'])){
+			$wpdb->delete( 'project_information', 
+				array(
+					'id'=>$_POST['delete']
+				)
+
+			);
+
+		}
+
+
+		if (isset($_POST['edit'])){
+			//$update = true;
+			$id = $_POST['edit'];
+			echo "$id";
+			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
+			echo "<tr>";
+			echo "<td>";
+			 echo $obj->projectTitle; echo"</td>";
+			echo"<td>"; echo $obj->projectAbstract; echo" </td>";
+			
+			echo "</tr>";
+			
+			// echo $_POST['projectTitle'];//$rec->projectTitle???????
+			// echo $rec->projectAbstract;  //$rec->projectAbstract???????
+			// $id= $rec['id'];
+			
+		}
+
+
+
+		$results = $wpdb->get_results(" SELECT * FROM project_information");
+		?>
+		<form method="post" action="?page_id=530">
 		<table>	
 				<tr>
 					<th>Project Title</th>
@@ -76,23 +100,24 @@
 				</tr>
 
 		<?php  
-		foreach ($result as $obj)
+		foreach ($results as $obj)
 		{?>
 
 		<tr>
 			<td><?php  echo $obj->projectTitle;?> </td>
 			<td> <?php echo $obj->projectAbstract;  ?> </td>
 			<td>  
-			<a href="?page_id=530?edit=<?php echo $obj->id; ?>"><?php echo $obj->id; ?>Edit</a>
+				<a><button name="edit" value= "<?php echo $obj->id; ?>">Edit</button></a>
 			</td>
 			<td>
-				 <button type="submit" name="del">Del</button>
+				<a><button name="delete" value= "<?php echo $obj->id; ?>">Delete</button></a>
 			</td>
 		</tr>
 
 		<?php 
 		}
 		echo"</table>";
+		
 	}
 	add_shortcode('project_information_table','display_table');
 
@@ -106,20 +131,19 @@
 		<form method="post" action="?page_id=530">
 			<input type="hidden" name="id" value="<?php echo $id; ?>">
 			<label>Project Title</label><br>
-			<input type="text" name="projectTitle" value="<?php echo $projectTitle; ?>" placeholder="<?php echo $obj->id;?>"/><br>
+			<input type="text" name="projectTitle" value="<?php echo $_POST['projectTitle'];?>" placeholder="<?php echo $_POST['projectTitle'];?>"/><br>
 			<label>Project Abstract<?php echo $projectAbstract; ?></label><br>
-			<textarea name="projectAbstract" value="<?php echo $projectAbstract; ?>" placeholder="Write down the abstract here."></textarea><br>
+
+			<textarea name="projectAbstract" value="<?php echo $projectAbstract; ?>" placeholder="<?php echo $projectAbstract; ?>"></textarea><br>
 			<!-- <input type="submit" name="submit"> -->
 
 
 			<?php if ($update == true): ?>
-				<button  type="submit" name="update" >update</button>
+				<button  type="submit" name="update" >Update</button>
 			<?php else: ?>
-				<button type="submit" name="submit" >Save</button>
+				<button type="submit" name="save" >Save</button>
 			<?php endif ?>
-		
-
-
+	
 		<?php  
 
 	}
