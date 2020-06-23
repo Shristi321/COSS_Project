@@ -61,10 +61,9 @@
 
 
 		if (isset($_POST['edit'])){
-			//$update = true;
+			$update = true;
 			$id = $_POST['edit'];
-			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
-			echo "<pre>";print_r($rec); echo "</pre>";	
+			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");	
 
 			//Send information to $_POST
 			$_POST = array_merge($_POST,$rec);
