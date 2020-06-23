@@ -141,10 +141,12 @@
 			<input type="hidden" name="id" value="<?php echo $id; ?>">
 			<label>Project Title</label><br>
 			<input type="text" name="projectTitle" value="<?php echo $_POST[0]->projectTitle;?>" placeholder="Project Title"><br>
-			<label>Project Abstract<?php echo $projectAbstract; ?></label><br>
+			<label>Project Abstract</label><br>
 
-			<textarea name="projectAbstract" value="<?php echo $_POST[0]->projectAbstract;?>" placeholder="<?php echo $_POST[0]->projectAbstract;?>"></textarea><br>
-			<!-- <input type="submit" name="submit"> -->
+			<input type="text" name="projectAbstract" value="<?php echo $_POST[0]->projectAbstract;?>" placeholder="Project Abstract"><br>
+
+			<!--  <textarea name='projectAbstract' placeholder="Your Abstract"> <?php //echo $_POST[0]->projectAbstract;?> </textarea><br>  -->
+			
 
 
 			<?php if ($update == true): ?>
