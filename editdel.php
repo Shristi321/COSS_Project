@@ -18,15 +18,6 @@
 	<?php 
 
 	global $wpdb; 
-	// if (isset($_GET['edit'])){
-	// 	$id = $_GET['edit'];
-	// 	$update = true;
-	// 	$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
-		               
-	// 		$projectTitle =  $_POST['projectTitle'];//$rec->projectTitle???????
-	// 		$projectAbstract = $rec->projectAbstract;//$rec->projectAbstract???????
-	// 		$id= $rec['id'];
-	// }
 
 
 	if (isset($_POST['update'])) {
@@ -77,15 +68,6 @@
 
 			//Send information to $_POST
 			$_POST = array_merge($_POST,$rec);
-			var_dump($_POST);
-			
-			//$thisProjectTitle = $rec->projectTitle;
-			//echo $thisProjectTitle;
-			//echo "<pre>"; echo $rec->projectTitle; echo "</pre>";
-
-			// echo $_POST['projectTitle'];//$rec->projectTitle???????
-			// echo $rec->projectAbstract;  //$rec->projectAbstract???????
-			// $id= $rec['id'];
 			
 		}
 
