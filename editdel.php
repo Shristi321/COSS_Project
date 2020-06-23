@@ -72,10 +72,17 @@
 		if (isset($_POST['edit'])){
 			//$update = true;
 			$id = $_POST['edit'];
-			echo "$id";
 			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
-			echo "<pre>";print_r($rec); echo "</pre>";
+			echo "<pre>";print_r($rec); echo "</pre>";	
+
+			//Send information to $_POST
+			$_POST = array_merge($_POST,$rec);
+			var_dump($_POST);
 			
+			//$thisProjectTitle = $rec->projectTitle;
+			//echo $thisProjectTitle;
+			//echo "<pre>"; echo $rec->projectTitle; echo "</pre>";
+
 			// echo $_POST['projectTitle'];//$rec->projectTitle???????
 			// echo $rec->projectAbstract;  //$rec->projectAbstract???????
 			// $id= $rec['id'];
@@ -126,15 +133,17 @@
 /*project_information FORM */
 
 	function project_information_form()
-	{?>
+	{
+
+		?>
 
 		<form method="post" action="?page_id=530">
 			<input type="hidden" name="id" value="<?php echo $id; ?>">
 			<label>Project Title</label><br>
-			<input type="text" name="projectTitle" value="<?php echo $_POST['projectTitle'];?>" placeholder="<?php echo $_POST['projectTitle'];?>"/><br>
+			<input type="text" name="projectTitle" value="<?php echo $_POST[0]->projectTitle;?>" placeholder="Project Title"><br>
 			<label>Project Abstract<?php echo $projectAbstract; ?></label><br>
 
-			<textarea name="projectAbstract" value="<?php echo $projectAbstract; ?>" placeholder="<?php echo $projectAbstract; ?>"></textarea><br>
+			<textarea name="projectAbstract" value="<?php echo $_POST[0]->projectAbstract;?>" placeholder="<?php echo $_POST[0]->projectAbstract;?>"></textarea><br>
 			<!-- <input type="submit" name="submit"> -->
 
 
