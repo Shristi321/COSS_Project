@@ -8,14 +8,14 @@
 
 <?php 
 	session_start();
-	
 	$projectTitle = "";
 	$projectAbstract = "";
 	$id = 0;
 	$update = "false";
 	?>
 
-	<?php 
+<?php  
+	
 
 	global $wpdb; 
 
@@ -23,28 +23,25 @@
 		$id=$_POST['update'];
 		$projectTitle = $_POST['projectTitle'];
 		$projectAbstract = $_POST['projectAbstract'];
-
-		$wpdb->get_results("UPDATE project_information SET projectTitle='$projectTitle', projectAbstract='$projectAbstract' WHERE id=$id"); 
+		
+		$wpdb->get_results("UPDATE project_information SET projectTitle='$projectTitle', projectAbstract='$projectAbstract' WHERE id=$id");	
 	}
 
 
 	if (isset($_POST['save'])) {
 		$projectTitle = $_POST['projectTitle'];
 		$projectAbstract = $_POST['projectAbstract'];
-
-		$wpdb->get_results("INSERT INTO project_information (projectTitle, projectAbstract) VALUES ('$projectTitle', '$projectAbstract')"); 	
+		
+		$wpdb->get_results("INSERT INTO project_information (projectTitle, projectAbstract) VALUES ('$projectTitle', '$projectAbstract')");		
 	}
-
 
 	?>
 
 
 <?php 
 
-	function display_table()
-	{
+	function display_table(){
 		global $wpdb;
-
 
 		if (isset($_POST['edit'])){
 			$id = $_POST['edit'];
@@ -97,7 +94,6 @@
 		</form>
 		<?php  
 		
-		
 	}
 	add_shortcode('project_information_table','display_table');
 
@@ -132,5 +128,3 @@
 
 	}
 	add_shortcode('project_information_contact_form','project_information_form');
-
-	
