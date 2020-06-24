@@ -12,7 +12,7 @@
 	$projectTitle = "";
 	$projectAbstract = "";
 	$id = 0;
-	$update = false;
+	$update = "fal";
 	?>
 
 	<?php 
@@ -48,7 +48,7 @@
 
 		if (isset($_POST['edit'])){
 			$id = $_POST['edit'];
-			$update= true;
+			$_POST['update']= "tru";//$update=true;
 			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");	
 
 			//Send information to $_POST
@@ -121,7 +121,7 @@
 			
 
 		<div>
-			<?php if ($update == true): ?>
+			<?php if ($_POST['update'] == "tru"): ?>
 
 				<button type="submit" name="update" value="<?php echo $_POST[0]->id; ?>">Update</button>
 			<?php else: ?>
