@@ -12,7 +12,7 @@
 	$projectTitle = "";
 	$projectAbstract = "";
 	$id = 0;
-	$update = "fal";
+	$update = "false";
 	?>
 
 	<?php 
@@ -48,7 +48,7 @@
 
 		if (isset($_POST['edit'])){
 			$id = $_POST['edit'];
-			$_POST['update']= "tru";//$update=true;
+			$_POST['update']= "true";//$update=true;
 			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");	
 
 			//Send information to $_POST
@@ -108,7 +108,6 @@
 	function project_information_form()
 	{
 		?>
-
 		<form method="post" action="?page_id=530">
 			<input type="hidden" name="id" value="<?php echo $id; ?>">
 			<label>Project Title</label><br>
@@ -118,10 +117,9 @@
 			<input type="text" name="projectAbstract" value="<?php echo $_POST[0]->projectAbstract;?>" placeholder="Project Abstract"><br>
 
 			<!--  <textarea name='projectAbstract' placeholder="Your Abstract"> <?php //echo $_POST[0]->projectAbstract;?> </textarea><br>  -->
-			
 
 		<div>
-			<?php if ($_POST['update'] == "tru"): ?>
+			<?php if ($_POST['update'] == "true"): ?>
 
 				<button type="submit" name="update" value="<?php echo $_POST[0]->id; ?>">Update</button>
 			<?php else: ?>
