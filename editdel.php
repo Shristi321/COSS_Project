@@ -32,8 +32,7 @@
 		$projectTitle = $_POST['projectTitle'];
 		$projectAbstract = $_POST['projectAbstract'];
 
-		$wpdb->get_results("INSERT INTO project_information (projectTitle, projectAbstract) VALUES ('$projectTitle', '$projectAbstract')"); 
-		
+		$wpdb->get_results("INSERT INTO project_information (projectTitle, projectAbstract) VALUES ('$projectTitle', '$projectAbstract')"); 	
 	}
 
 
@@ -42,10 +41,19 @@
 
 <?php 
 
-
 	function display_table()
 	{
 		global $wpdb;
+
+
+		if (isset($_POST['edit'])){
+			$id = $_POST['edit'];
+			$update= true;
+			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");	
+
+			//Send information to $_POST
+			$_POST = array_merge($_POST,$rec);	
+		}
 
 		if(isset($_POST['delete'])){
 			$wpdb->delete( 'project_information', 
@@ -54,17 +62,6 @@
 				)
 			);
 		}
-
-		if (isset($_POST['edit'])){
-			$update = true;
-			$id = $_POST['edit'];
-			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");	
-
-			//Send information to $_POST
-			$_POST = array_merge($_POST,$rec);
-			
-		}
-
 
 
 		$results = $wpdb->get_results(" SELECT * FROM project_information");
@@ -110,12 +107,7 @@
 
 	function project_information_form()
 	{
-
-		
-
 		?>
-
-
 
 		<form method="post" action="?page_id=530">
 			<input type="hidden" name="id" value="<?php echo $id; ?>">
@@ -128,13 +120,14 @@
 			<!--  <textarea name='projectAbstract' placeholder="Your Abstract"> <?php //echo $_POST[0]->projectAbstract;?> </textarea><br>  -->
 			
 
+		<div>
+			<?php if ($update == true): ?>
 
-			<?php if ($update == true): ?><!-- ?????????<?php //if ($update == false): ?> -->
-
-				<button  type="submit" name="save" ?>">Save</button>
-			<?php else: ?>
 				<button type="submit" name="update" value="<?php echo $_POST[0]->id; ?>">Update</button>
+			<?php else: ?>
+				<button  type="submit" name="save">Save</button>
 			<?php endif ?>
+		</div>
 		</form>
 	
 		<?php  
