@@ -11,12 +11,11 @@
 	$projectTitle = "";
 	$projectAbstract = "";
 	$id = 0;
-	$update = "false";
+	$button_type = "";
 	?>
 
 <?php  
 	
-
 	global $wpdb; 
 
 	if (isset($_POST['update'])) {
@@ -27,14 +26,43 @@
 		$wpdb->get_results("UPDATE project_info SET projectTitle='$projectTitle', projectAbstract='$projectAbstract' WHERE id=$id");	
 	}
 
-
 	if (isset($_POST['save'])) {
+		// $userid=$current_user->ID;
+		// $projectId=$_POST['save'];
 		$projectTitle = $_POST['projectTitle'];
 		$projectAbstract = $_POST['projectAbstract'];
 		$email=$_POST['email'];
 		
-		$wpdb->get_results("INSERT INTO project_info (email, projectTitle, projectAbstract) VALUES ('$email', '$projectTitle', '$projectAbstract')");		
+		$wpdb->get_results("INSERT INTO project_info (email, projectTitle, projectAbstract) VALUES ('$email', '$projectTitle', '$projectAbstract')");
+			
 	}
+
+	if (isset($_POST['cancel'])) {
+		header('location: ?page_id=571'); 
+	}
+
+	if (isset($_POST['confirm'])) {
+		
+		$userid=$current_user->ID;
+		$projectId=$_POST['confirm'];
+		$useremail=$_POST['collab_email'];
+
+		$wpdb->get_results("INSERT INTO user_info (user_id, project_id, email) VALUES ('$userid', '$projectId', '$useremail')");
+
+		//header('location: ?page_id=571'); 
+	}
+
+	// if (isset($_POST['save'])) {
+		
+	// 	$userid=$current_user->ID;
+	// 	$projectId=$_POST['save'];
+	// 	$useremail=$_POST['email'];
+
+	// 	$wpdb->get_results("INSERT INTO user_info (user_id, project_id, email) VALUES ('$userid', '$projectId', '$useremail')");
+
+	// 	//header('location: ?page_id=571'); 
+	// }
+
 
 	?>
 
@@ -44,13 +72,11 @@
 	function display_table(){
 		global $wpdb;
 		global $current_user;
-		var_dump($current_user);
-		echo 'space here';
-		var_dump($current_user->user_email);
-
 		if (isset($_POST['edit'])){
 			$id = $_POST['edit'];
-			$_POST['update']= "true";//$update=true;
+
+			$_POST['button_type']= "edit";//$update=true;
+			// $_POST['collaborator']= "true";
 			$rec = $wpdb->get_results("SELECT * FROM project_info WHERE id=$id");	
 
 			//Send information to $_POST
@@ -63,7 +89,21 @@
 					'id'=>$_POST['delete']
 				)
 			);
+			header('location: ?page_id=571'); 
 		}
+
+
+		if (isset($_POST['add'])) {
+			$id = $_POST['add'];
+			$_POST['button_type']= "add";
+			$projectTitle=$_POST['projectTitle'];
+			$add = $wpdb->get_results("SELECT * FROM project_info WHERE id=$id");
+			$_POST = array_merge($_POST,$add);
+		// header('location: ?page_id=582'); 	
+		}
+
+
+
 
 
 		$results = $wpdb->get_results(" SELECT * FROM project_info WHERE email='$current_user->user_email'");
@@ -75,6 +115,7 @@
 					<th>Project Abstract</th>
 					<th>Edit</th>
 					<th>Delete</th>
+					<th>Add Collaborators</th>
 				</tr>
 
 		<?php  
@@ -89,6 +130,10 @@
 			</td>
 			<td>
 				<a><button name="delete" value= "<?php echo $obj->id; ?>">Delete</button></a>
+
+			</td>
+			<td>
+				<a><button name="add" value= "<?php echo $obj->id; ?>">Add</button></a>
 			</td>
 		</tr>
 
@@ -108,42 +153,71 @@
 
 	function project_information_form()
 	{
-		global $current_user; wp_get_current_user();
-		echo 'Username: ' . $current_user->user_login . "\n";echo"<br>";
-		echo 'User display name: ' . $current_user->display_name;echo"<br>";
-
-		global $current_user;
-		get_currentuserinfo();
-
+		global $current_user; 
 		$email = $current_user->user_email;
-		echo($email);
-
 
 		?>
-		<form method="post" action="?page_id=530">
+		<form method="post" action="?page_id=571">
 			<input type="hidden" name="id" value="<?php echo $id; ?>">
+
+			<?php if ($_POST['button_type'] == "add"): ?>
+
 			<label>Email</label><br>
 			<input type="text" name="email" value="<?php echo $email ?>" placeholder="<?php echo $email; ?>"><br>
 
 			<label>Project Title</label><br>
 			<input type="text" name="projectTitle" value="<?php echo $_POST[0]->projectTitle;?>" placeholder="Project Title"><br>
-			<label>Project Abstract</label><br>
 
+			<label>Collaborator's Email</label><br>
+			<input type="text" name="collab_email" placeholder="Collaborator's Email"><br>
+
+			<button type="submit" name="confirm" value="<?php echo $_POST[0]->id; ?>">Confirm</button>
+			<button type="submit" name="cancel" value="<?php echo $_POST[0]->id; ?>">Cancel</button>
+
+			<?php else: ?>
+
+			<label>Email</label><br>
+			<input type="text" name="email" value="<?php echo $email ?>" placeholder="<?php echo $email; ?>"><br>
+
+			<label>Project Title</label><br>
+			<input type="text" name="projectTitle" value="<?php echo $_POST[0]->projectTitle;?>" placeholder="Project Title"><br>
+
+			<label>Project Abstract</label><br>
 			<input type="text" name="projectAbstract" value="<?php echo $_POST[0]->projectAbstract;?>" placeholder="Project Abstract"><br>
+
 
 			<!--  <textarea name='projectAbstract' placeholder="Your Abstract"> <?php //echo $_POST[0]->projectAbstract;?> </textarea><br>  -->
 
-		<div>
-			<?php if ($_POST['update'] == "true"): ?>
+		
+			<?php if ($_POST['button_type'] == "edit"): ?>
 
 				<button type="submit" name="update" value="<?php echo $_POST[0]->id; ?>">Update</button>
+				<button type="submit" name="cancel" value="<?php echo $_POST[0]->id; ?>">Cancel</button>
+
 			<?php else: ?>
-				<button  type="submit" name="save">Save</button>
+				<button type="submit" name="save" value="<?php echo $_POST[0]->id; ?>">Save</button>
 			<?php endif ?>
-		</div>
+			<?php endif ?>
+		
 		</form>
 	
 		<?php  
 
 	}
 	add_shortcode('project_information_contact_form','project_information_form');
+
+
+	function add_new_project(){
+		?>
+		<a href="http://localhost/codeanddesign/?page_id=573"><button>Add New Project</button></a>
+		<?php 
+	}
+	add_shortcode('add_project_button','add_new_project');
+
+
+	
+
+	?>
+
+
+
