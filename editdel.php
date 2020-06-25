@@ -27,13 +27,26 @@
 	}
 
 	if (isset($_POST['save'])) {
-		// $userid=$current_user->ID;
+		// $user_id=$current_user->ID;
 		// $projectId=$_POST['save'];
 		$projectTitle = $_POST['projectTitle'];
 		$projectAbstract = $_POST['projectAbstract'];
 		$email=$_POST['email'];
 		
 		$wpdb->get_results("INSERT INTO project_info (email, projectTitle, projectAbstract) VALUES ('$email', '$projectTitle', '$projectAbstract')");
+
+		$lastID=$wpdb->get_results("SELECT LAST_INSERT_ID()");
+		$lastIDarray = (array) $lastID[0];
+		$stuff = array_values($lastIDarray);
+		$projectId = (int) $stuff[0];//this last chunk fetches the id of the most recently added project, but ini a super janky way.  FIND A BETTER WAY!
+		// $projectId = $projectId[0]->LAST_INSERT_ID();
+		//var_dump($stuff);
+		
+		echo($projectId);
+		echo($email);
+
+
+		$wpdb->get_results("INSERT INTO user_info (project_id, email) VALUES ('$projectId', '$email')");
 			
 	}
 
@@ -43,11 +56,10 @@
 
 	if (isset($_POST['confirm'])) {
 		
-		$userid=$current_user->ID;
 		$projectId=$_POST['confirm'];
 		$useremail=$_POST['collab_email'];
 
-		$wpdb->get_results("INSERT INTO user_info (user_id, project_id, email) VALUES ('$userid', '$projectId', '$useremail')");
+		$wpdb->get_results("INSERT INTO user_info (project_id, email) VALUES ('$projectId', '$useremail')");
 
 		//header('location: ?page_id=571'); 
 	}
@@ -94,11 +106,14 @@
 
 
 		if (isset($_POST['add'])) {
+			
 			$id = $_POST['add'];
 			$_POST['button_type']= "add";
 			$projectTitle=$_POST['projectTitle'];
 			$add = $wpdb->get_results("SELECT * FROM project_info WHERE id=$id");
 			$_POST = array_merge($_POST,$add);
+
+
 		// header('location: ?page_id=582'); 	
 		}
 
