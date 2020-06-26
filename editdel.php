@@ -23,7 +23,7 @@
 		$projectTitle = $_POST['projectTitle'];
 		$projectAbstract = $_POST['projectAbstract'];
 		
-		$wpdb->get_results("UPDATE project_info SET projectTitle='$projectTitle', projectAbstract='$projectAbstract' WHERE id=$id");	
+		$wpdb->get_results("UPDATE project_information SET projectTitle='$projectTitle', projectAbstract='$projectAbstract' WHERE id=$id");	
 	}
 
 
@@ -34,7 +34,7 @@
 		$projectAbstract = $_POST['projectAbstract'];
 		$email=$_POST['email'];
 		
-		$wpdb->get_results("INSERT INTO project_info (email, projectTitle, projectAbstract) VALUES ('$email', '$projectTitle', '$projectAbstract')");
+		$wpdb->get_results("INSERT INTO project_information (email, projectTitle, projectAbstract) VALUES ('$email', '$projectTitle', '$projectAbstract')");
 
 		$lastID=$wpdb->get_results("SELECT LAST_INSERT_ID()");
 		$lastIDarray = (array) $lastID[0];
@@ -75,18 +75,18 @@
 
 			$_POST['button_type']= "edit";//$update=true;
 			// $_POST['collaborator']= "true";
-			$rec = $wpdb->get_results("SELECT * FROM project_info WHERE id=$id");	
+			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");	
 
 			//Send information to $_POST
 			$_POST = array_merge($_POST,$rec);	
 		}
 
 		if(isset($_POST['delete'])){
-			$wpdb->delete( 'project_info', 
-				array(
-					'id'=>$_POST['delete']
-				)
-			);
+			// $wpdb->delete( 'project_information', 
+			// 	array(
+			// 		'id'=>$_POST['delete']
+			// 	)
+			// );
 
 			$wpdb->delete( 'user_information', 
 				array(
@@ -103,16 +103,16 @@
 			$id = $_POST['add'];
 			$_POST['button_type']= "add";
 			$projectTitle=$_POST['projectTitle'];
-			$add = $wpdb->get_results("SELECT * FROM project_info WHERE id=$id");
+			$add = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
 			$_POST = array_merge($_POST,$add);
 
 
 		// header('location: ?page_id=582'); 	
 		}
 
-		$results = $wpdb->get_results(" SELECT project_info.id, project_info.projectTitle, project_info.projectAbstract FROM project_info JOIN user_information ON project_info.id=user_information.project_id ");
+		$results = $wpdb->get_results(" SELECT project_information.id, project_information.projectTitle, project_information.projectAbstract FROM project_information INNER JOIN user_information ON project_information.id=user_information.project_id WHERE user_information.email='$current_user->user_email'");
 
-		// $results = $wpdb->get_results(" SELECT project_info.id, project_info.projectTitle, project_info.projectAbstract FROM project_info WHERE email='$current_user->user_email'");
+		// $results = $wpdb->get_results(" SELECT project_information.id, project_information.projectTitle, project_information.projectAbstract FROM project_information WHERE email='$current_user->user_email'");
 		?>
 		<form method="post" action="?page_id=530">
 		<table>	
