@@ -26,6 +26,7 @@
 		$wpdb->get_results("UPDATE project_info SET projectTitle='$projectTitle', projectAbstract='$projectAbstract' WHERE id=$id");	
 	}
 
+
 	if (isset($_POST['save'])) {
 		// $user_id=$current_user->ID;
 		// $projectId=$_POST['save'];
@@ -38,14 +39,10 @@
 		$lastID=$wpdb->get_results("SELECT LAST_INSERT_ID()");
 		$lastIDarray = (array) $lastID[0];
 		$stuff = array_values($lastIDarray);
-		$projectId = (int) $stuff[0];//this last chunk fetches the id of the most recently added project, but ini a super janky way.  FIND A BETTER WAY!
-		// $projectId = $projectId[0]->LAST_INSERT_ID();
-		//var_dump($stuff);
+		$projectId = (int) $stuff[0];
+		//this last chunk fetches the id of the most recently added project, but ini a super janky way.  FIND A BETTER WAY!
+		 // $projectId = $projectId[0]->LAST_INSERT_ID();
 		
-		echo($projectId);
-		echo($email);
-
-
 		$wpdb->get_results("INSERT INTO user_info (project_id, email) VALUES ('$projectId', '$email')");
 			
 	}
@@ -63,17 +60,6 @@
 
 		//header('location: ?page_id=571'); 
 	}
-
-	// if (isset($_POST['save'])) {
-		
-	// 	$userid=$current_user->ID;
-	// 	$projectId=$_POST['save'];
-	// 	$useremail=$_POST['email'];
-
-	// 	$wpdb->get_results("INSERT INTO user_info (user_id, project_id, email) VALUES ('$userid', '$projectId', '$useremail')");
-
-	// 	//header('location: ?page_id=571'); 
-	// }
 
 
 	?>
@@ -101,6 +87,13 @@
 					'id'=>$_POST['delete']
 				)
 			);
+
+			$wpdb->delete( 'user_info', 
+				array(
+					'project_id'=>$_POST['delete']
+				)
+			);
+
 			header('location: ?page_id=571'); 
 		}
 
