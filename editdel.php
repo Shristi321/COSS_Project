@@ -43,7 +43,7 @@
 		//this last chunk fetches the id of the most recently added project, but ini a super janky way.  FIND A BETTER WAY!
 		 // $projectId = $projectId[0]->LAST_INSERT_ID();
 		
-		$wpdb->get_results("INSERT INTO user_info (project_id, email) VALUES ('$projectId', '$email')");
+		$wpdb->get_results("INSERT INTO user_information (project_id, email) VALUES ('$projectId', '$email')");
 			
 	}
 
@@ -56,7 +56,7 @@
 		$projectId=$_POST['confirm'];
 		$useremail=$_POST['collab_email'];
 
-		$wpdb->get_results("INSERT INTO user_info (project_id, email) VALUES ('$projectId', '$useremail')");
+		$wpdb->get_results("INSERT INTO user_information (project_id, email) VALUES ('$projectId', '$useremail')");
 
 		//header('location: ?page_id=571'); 
 	}
@@ -88,7 +88,7 @@
 				)
 			);
 
-			$wpdb->delete( 'user_info', 
+			$wpdb->delete( 'user_information', 
 				array(
 					'project_id'=>$_POST['delete']
 				)
@@ -110,11 +110,9 @@
 		// header('location: ?page_id=582'); 	
 		}
 
+		$results = $wpdb->get_results(" SELECT project_info.id, project_info.projectTitle, project_info.projectAbstract FROM project_info JOIN user_information ON project_info.id=user_information.project_id ");
 
-
-
-
-		$results = $wpdb->get_results(" SELECT * FROM project_info WHERE email='$current_user->user_email'");
+		// $results = $wpdb->get_results(" SELECT project_info.id, project_info.projectTitle, project_info.projectAbstract FROM project_info WHERE email='$current_user->user_email'");
 		?>
 		<form method="post" action="?page_id=530">
 		<table>	
