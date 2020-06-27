@@ -82,16 +82,19 @@
 		}
 
 		if(isset($_POST['delete'])){
-			// $wpdb->delete( 'project_information', 
-			// 	array(
-			// 		'id'=>$_POST['delete']
-			// 	)
-			// );
+			$wpdb->delete( 'project_information', 
+				array(
+					'id'=>$_POST['delete']
+				)
+			);
+
+			// $wpdb->query( "DELETE FROM user_information WHERE project_id=$_POST['delete'] AND user_information.email='$current_user->user_email'" );
+
 
 			$wpdb->delete( 'user_information', 
 				array(
-					'project_id'=>$_POST['delete']
-				)
+					'project_id'=>$_POST['delete'] 
+				) 
 			);
 
 			header('location: ?page_id=571'); 
@@ -168,11 +171,11 @@
 
 			<?php if ($_POST['button_type'] == "add"): ?>
 
-			<label>Email</label><br>
-			<input type="text" name="email" value="<?php echo $email ?>" placeholder="<?php echo $email; ?>"><br>
+			<!-- <label>Email</label><br> -->
+			<input type="hidden" name="email" value="<?php echo $email ?>" placeholder="<?php echo $email; ?>"><br>
 
-			<label>Project Title</label><br>
-			<input type="text" name="projectTitle" value="<?php echo $_POST[0]->projectTitle;?>" placeholder="Project Title"><br>
+			<!-- <label>Project Title</label><br> -->
+			<input type="hidden" name="projectTitle" value="<?php echo $_POST[0]->projectTitle;?>" placeholder="Project Title"><br>
 
 			<label>Collaborator's Email</label><br>
 			<input type="text" name="collab_email" placeholder="Collaborator's Email"><br>
