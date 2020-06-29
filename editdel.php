@@ -28,8 +28,6 @@
 
 
 	if (isset($_POST['save'])) {
-		// $user_id=$current_user->ID;
-		// $projectId=$_POST['save'];
 		$projectTitle = $_POST['projectTitle'];
 		$projectAbstract = $_POST['projectAbstract'];
 		$email=$_POST['email'];
@@ -40,9 +38,6 @@
 		$lastIDarray = (array) $lastID[0];
 		$stuff = array_values($lastIDarray);
 		$projectId = (int) $stuff[0];
-		//this last chunk fetches the id of the most recently added project, but ini a super janky way.  FIND A BETTER WAY!
-		 // $projectId = $projectId[0]->LAST_INSERT_ID();
-		
 		$wpdb->get_results("INSERT INTO user_information (project_id, email) VALUES ('$projectId', '$email')");
 			
 	}
@@ -57,16 +52,11 @@
 		$useremail=$_POST['collab_email'];
 
 		$wpdb->get_results("INSERT INTO user_information (project_id, email) VALUES ('$projectId', '$useremail')");
-
-		//header('location: ?page_id=571'); 
 	}
-
-
 	?>
 
 
 <?php 
-
 	function display_table(){
 		global $wpdb;
 		global $current_user;
@@ -90,7 +80,6 @@
 
 			// $wpdb->query( "DELETE FROM user_information WHERE project_id=$_POST['delete'] AND user_information.email='$current_user->user_email'" );
 
-
 			$wpdb->delete( 'user_information', 
 				array(
 					'project_id'=>$_POST['delete'] 
@@ -107,19 +96,15 @@
 			$_POST['button_type']= "add";
 			$projectTitle=$_POST['projectTitle'];
 			$add = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
-			$_POST = array_merge($_POST,$add);
-
-
-		// header('location: ?page_id=582'); 	
+			$_POST = array_merge($_POST,$add); 	
 		}
 
-		$results = $wpdb->get_results(" SELECT project_information.id, project_information.projectTitle, project_information.projectAbstract FROM project_information INNER JOIN user_information ON project_information.id=user_information.project_id WHERE user_information.email='$current_user->user_email'");
 
-		// $results = $wpdb->get_results(" SELECT project_information.id, project_information.projectTitle, project_information.projectAbstract FROM project_information WHERE email='$current_user->user_email'");
+	$results = $wpdb->get_results(" SELECT project_information.id, project_information.projectTitle, project_information.projectAbstract FROM project_information INNER JOIN user_information ON project_information.id=user_information.project_id WHERE user_information.email='$current_user->user_email'");
 		?>
+
 		<form method="post" action="?page_id=530">
 		<table>	
-			
 				<tr>
 					<th>Project Title</th>
 					<th>Project Abstract</th>
@@ -135,16 +120,9 @@
 		<tr>
 			<td><?php  echo $obj->projectTitle;?> </td>
 			<td> <?php echo $obj->projectAbstract;  ?> </td>
-			<td>  
-				<a><button name="edit" value= "<?php echo $obj->id; ?>">Edit</button></a>
-			</td>
-			<td>
-				<a><button name="delete" value= "<?php echo $obj->id; ?>">Delete</button></a>
-
-			</td>
-			<td>
-				<a><button name="add" value= "<?php echo $obj->id; ?>">Add</button></a>
-			</td>
+			<td><a><button name="edit" value= "<?php echo $obj->id; ?>">Edit</button></a></td>
+			<td><a><button name="delete" value= "<?php echo $obj->id; ?>">Delete</button></a></td>
+			<td><a><button name="add" value= "<?php echo $obj->id; ?>">Add</button></a></td>
 		</tr>
 
 		<?php 
@@ -152,11 +130,9 @@
 		?>
 		</table>
 		</form>
-		<?php  
-		
+		<?php  	
 	}
 	add_shortcode('project_information_table','display_table');
-
 
 
 /*project_information FORM */
@@ -165,22 +141,22 @@
 	{
 		global $current_user; 
 		$email = $current_user->user_email;
-
 		?>
+
 		<form method="post" action="?page_id=571">
 			<input type="hidden" name="id" value="<?php echo $id; ?>">
 
 			<?php if ($_POST['button_type'] == "add"): ?>
 
 			<!-- <label>Email</label><br> -->
-			<input type="hidden" name="email" value="<?php echo $email ?>" placeholder="<?php echo $email; ?>"><br>
+			<!-- <input type="hidden" name="email" value="<?php echo $email ?>" placeholder="<?php echo $email; ?>"><br> -->
 
 			<!-- <label>Project Title</label><br> -->
-			<input type="hidden" name="projectTitle" value="<?php echo $_POST[0]->projectTitle;?>" placeholder="Project Title"><br>
+			<!-- <input type="hidden" name="projectTitle" value="<?php echo $_POST[0]->projectTitle;?>" placeholder="Project Title"><br> -->
 
 			<label>Collaborator's Email</label><br>
 			<input type="text" name="collab_email" placeholder="Collaborator's Email"><br>
-
+			
 			<button type="submit" name="confirm" value="<?php echo $_POST[0]->id; ?>">Confirm</button>
 			<button type="submit" name="cancel" value="<?php echo $_POST[0]->id; ?>">Cancel</button>
 
@@ -208,7 +184,6 @@
 				<button type="submit" name="save" value="<?php echo $_POST[0]->id; ?>">Save</button>
 			<?php endif ?>
 			<?php endif ?>
-		
 		</form>
 	
 		<?php  
@@ -223,10 +198,4 @@
 		<?php 
 	}
 	add_shortcode('add_project_button','add_new_project');
-
-
-
 	?>
-
-
-
