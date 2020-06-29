@@ -119,6 +119,7 @@
 		?>
 		<form method="post" action="?page_id=530">
 		<table>	
+			
 				<tr>
 					<th>Project Title</th>
 					<th>Project Abstract</th>
@@ -224,7 +225,6 @@
 	add_shortcode('add_project_button','add_new_project');
 
 
-	
 
 	?>
 
