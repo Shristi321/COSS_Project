@@ -53,16 +53,29 @@
 
 		$wpdb->get_results("INSERT INTO user_information (project_id, email) VALUES ('$projectId', '$useremail')");
 	}
-	?>
 
+	if(isset($_POST['confirmDel'])){
+			$wpdb->delete( 'project_information', 
+				array(
+					'id'=>$_POST['confirmDel']
+				)
+			);
+			$wpdb->delete( 'user_information', 
+				array(
+					'project_id'=>$_POST['confirmDel'] 
+				) 
+			);
+			header('location: ?page_id=571'); 
+		}
+	?>
 
 <?php 
 	function display_table(){
 		global $wpdb;
 		global $current_user;
+
 		if (isset($_POST['edit'])){
 			$id = $_POST['edit'];
-
 			$_POST['button_type']= "edit";//$update=true;
 			// $_POST['collaborator']= "true";
 			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");	
@@ -72,29 +85,16 @@
 		}
 
 		if(isset($_POST['delete'])){
-			$wpdb->delete( 'project_information', 
-				array(
-					'id'=>$_POST['delete']
-				)
-			);
-
-			// $wpdb->query( "DELETE FROM user_information WHERE project_id=$_POST['delete'] AND user_information.email='$current_user->user_email'" );
-
-			$wpdb->delete( 'user_information', 
-				array(
-					'project_id'=>$_POST['delete'] 
-				) 
-			);
-
-			header('location: ?page_id=571'); 
+			$id = $_POST['delete'];
+			$_POST['button_type']= "delete"; 
+			$del = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
+			$_POST = array_merge($_POST,$del); 
 		}
 
 
 		if (isset($_POST['add'])) {
-			
 			$id = $_POST['add'];
 			$_POST['button_type']= "add";
-			$projectTitle=$_POST['projectTitle'];
 			$add = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
 			$_POST = array_merge($_POST,$add); 	
 		}
@@ -105,12 +105,26 @@
 
 		<form method="post" action="?page_id=530">
 		<table>	
+
+
+			<?php  
+			$column= array("Project Title","Project Abstract","Edit","Delete","Add Collaborators");
+			?>
 				<tr>
-					<th>Project Title</th>
+					<?php 
+					foreach ($column as $value) {
+						?> 
+						<th><?php echo $value?></th>
+						<?php  
+					}
+
+					 ?>
+
+					<!-- <th>Project Title</th>
 					<th>Project Abstract</th>
 					<th>Edit</th>
 					<th>Delete</th>
-					<th>Add Collaborators</th>
+					<th>Add Collaborators</th> -->
 				</tr>
 
 		<?php  
@@ -147,21 +161,18 @@
 			<input type="hidden" name="id" value="<?php echo $id; ?>">
 
 			<?php if ($_POST['button_type'] == "add"): ?>
-
-			<!-- <label>Email</label><br> -->
-			<!-- <input type="hidden" name="email" value="<?php echo $email ?>" placeholder="<?php echo $email; ?>"><br> -->
-
-			<!-- <label>Project Title</label><br> -->
-			<!-- <input type="hidden" name="projectTitle" value="<?php echo $_POST[0]->projectTitle;?>" placeholder="Project Title"><br> -->
-
 			<label>Collaborator's Email</label><br>
 			<input type="text" name="collab_email" placeholder="Collaborator's Email"><br>
-			
 			<button type="submit" name="confirm" value="<?php echo $_POST[0]->id; ?>">Confirm</button>
 			<button type="submit" name="cancel" value="<?php echo $_POST[0]->id; ?>">Cancel</button>
 
-			<?php else: ?>
+			<?php elseif ($_POST['button_type'] == "delete"): ?>
+			<label>Are you sure you want to delete??</label><br>
+			<button type="submit" name="confirmDel" value="<?php echo $_POST[0]->id; ?>">Yes!</button>
+			<button type="submit" name="cancel" value="<?php echo $_POST[0]->id; ?>">No</button>
 
+
+			<?php else: ?>
 			<label>Email</label><br>
 			<input type="text" name="email" value="<?php echo $email ?>" placeholder="<?php echo $email; ?>"><br>
 
@@ -175,9 +186,12 @@
 			<!--  <textarea name='projectAbstract' placeholder="Your Abstract"> <?php //echo $_POST[0]->projectAbstract;?> </textarea><br>  -->
 
 		
-			<?php if ($_POST['button_type'] == "edit"): ?>
+			<?php if ($_POST['button_type'] == "edit"): 
+				//press("update");
+				update();
+				?>
 
-				<button type="submit" name="update" value="<?php echo $_POST[0]->id; ?>">Update</button>
+				<!-- <button type="submit" name="update" value="<?php echo $_POST[0]->id; ?>">Update</button> -->
 				<button type="submit" name="cancel" value="<?php echo $_POST[0]->id; ?>">Cancel</button>
 
 			<?php else: ?>
@@ -198,4 +212,12 @@
 		<?php 
 	}
 	add_shortcode('add_project_button','add_new_project');
+
+
+	function update(){
+		?>
+		<button type="submit" name="update" value="<?php echo $_POST[0]->id; ?>">Update</button>
+		<?php 
+	}
+
 	?>
