@@ -16,8 +16,6 @@
 
 <?php  
 
-
-
 $column= array("Project Title","Project Abstract","Edit","Delete","Add Collaborators");
 	
 	global $wpdb; 
@@ -30,20 +28,17 @@ $column= array("Project Title","Project Abstract","Edit","Delete","Add Collabora
 		$wpdb->get_results("UPDATE project_information SET projectTitle='$projectTitle', projectAbstract='$projectAbstract' WHERE id=$id");	
 	}
 
-
 	if (isset($_POST['save'])) {
 		$projectTitle = $_POST['projectTitle'];
 		$projectAbstract = $_POST['projectAbstract'];
 		$email=$_POST['email'];
-		
 		$wpdb->get_results("INSERT INTO project_information (email, projectTitle, projectAbstract) VALUES ('$email', '$projectTitle', '$projectAbstract')");
 
 		$lastID=$wpdb->get_results("SELECT LAST_INSERT_ID()");
 		$lastIDarray = (array) $lastID[0];
 		$stuff = array_values($lastIDarray);
 		$projectId = (int) $stuff[0];
-		$wpdb->get_results("INSERT INTO user_information (project_id, email) VALUES ('$projectId', '$email')");
-			
+		$wpdb->get_results("INSERT INTO user_information (project_id, email) VALUES ('$projectId', '$email')");		
 	}
 
 	if (isset($_POST['cancel'])) {
@@ -51,10 +46,8 @@ $column= array("Project Title","Project Abstract","Edit","Delete","Add Collabora
 	}
 
 	if (isset($_POST['confirm'])) {
-		
 		$projectId=$_POST['confirm'];
 		$useremail=$_POST['collab_email'];
-
 		$wpdb->get_results("INSERT INTO user_information (project_id, email) VALUES ('$projectId', '$useremail')");
 	}
 
@@ -105,35 +98,26 @@ $column= array("Project Title","Project Abstract","Edit","Delete","Add Collabora
 		?>
 
 		<form method="post" action="?page_id=530">
-		<table>	
-			<?php  
-			// $column= array("Project Title","Project Abstract","Edit","Delete","Add Collaborators");
-			?>
+			<table>	
 				<tr>
 					<?php 
-					foreach ($column as $value) {
-						?> 
-						<th><strong><?php echo $value?></strong></th>
-						<?php  
-					}
-					 ?>
+					foreach ($column as $value) {?> 
+					<th><strong><?php echo $value?></strong></th>
+					<?php }	 ?>		
 				</tr>
-		<?php  
-		foreach ($results as $obj)
-		{?>
 
-		<tr>
-			<td><?php  echo $obj->projectTitle;?> </td>
-			<td> <?php echo $obj->projectAbstract;  ?> </td>
-			<td><a><button name="edit" value= "<?php echo $obj->id; ?>">Edit</button></a></td>
-			<td><a><button name="delete" value= "<?php echo $obj->id; ?>">Delete</button></a></td>
-			<td><a><button name="add" value= "<?php echo $obj->id; ?>">Add</button></a></td>
-		</tr>
+				<?php  
+				foreach ($results as $obj){?>
+				<tr>
+					<td><?php  echo $obj->projectTitle;?> </td>
+					<td> <?php echo $obj->projectAbstract;  ?> </td>
+					<td><a><button name="edit" value= "<?php echo $obj->id; ?>">Edit</button></a></td>
+					<td><a><button name="delete" value= "<?php echo $obj->id; ?>">Delete</button></a></td>
+					<td><a><button name="add" value= "<?php echo $obj->id; ?>">Add</button></a></td>
+				</tr>
+				<?php }?>
 
-		<?php 
-		}
-		?>
-		</table>
+			</table>
 		</form>
 		<?php  	
 	}
@@ -154,17 +138,19 @@ $column= array("Project Title","Project Abstract","Edit","Delete","Add Collabora
 
 			<?php if ($_POST['button_type'] == "add"): ?>
 			<label>Collaborator's Email</label><br>
-
 			<input type="text" name="collab_email" placeholder="Collaborator's Email"><br>
-			<button type="submit" name="confirm" value="<?php echo $_POST[0]->id; ?>">Confirm</button>
-			<button type="submit" name="cancel" value="<?php echo $_POST[0]->id; ?>">Cancel</button>
-
-			<?php elseif ($_POST['button_type'] == "delete"): ?>
+			<?php 
+			press("confirm","Confirm");
+			press("cancel","Cancel");
+			 
+			 elseif ($_POST['button_type'] == "delete"):
+			 ?>
 			<label>Are you sure you want to delete <?php echo $_POST[0]->projectTitle;?>?</label><br>
-			<button type="submit" name="confirmDel" value="<?php echo $_POST[0]->id; ?>">Yes!</button>
-			<button type="submit" name="cancel" value="<?php echo $_POST[0]->id; ?>">No</button>
+			<?php 
+			press("confirmDel","Yes!");
+			press("cancel","No");
 
-			<?php else: ?>
+			 else: ?>
 			<label>Email</label><br>
 			<input type="text" name="email" value="<?php echo $email ?>" placeholder="<?php echo $email; ?>"><br>
 
@@ -190,7 +176,6 @@ $column= array("Project Title","Project Abstract","Edit","Delete","Add Collabora
 			
 			<!--  <textarea name='projectAbstract' placeholder="Your Abstract"> <?php //echo $_POST[0]->projectAbstract;?> </textarea><br>  -->
 
-		
 			<?php if ($_POST['button_type'] == "edit"): 
 				press("update","Update");
 				press("cancel","Cancel");	
