@@ -15,6 +15,10 @@
 	?>
 
 <?php  
+
+
+
+$column= array("Project Title","Project Abstract","Edit","Delete","Add Collaborators");
 	
 	global $wpdb; 
 
@@ -73,15 +77,13 @@
 	function display_table(){
 		global $wpdb;
 		global $current_user;
+		global $column;
 
 		if (isset($_POST['edit'])){
 			$id = $_POST['edit'];
-			$_POST['button_type']= "edit";//$update=true;
-			// $_POST['collaborator']= "true";
+			$_POST['button_type']= "edit";
 			$rec = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");	
-
-			//Send information to $_POST
-			$_POST = array_merge($_POST,$rec);	
+			$_POST = array_merge($_POST,$rec);	//Send information to $_POST
 		}
 
 		if(isset($_POST['delete'])){
@@ -90,7 +92,6 @@
 			$del = $wpdb->get_results("SELECT * FROM project_information WHERE id=$id");
 			$_POST = array_merge($_POST,$del); 
 		}
-
 
 		if (isset($_POST['add'])) {
 			$id = $_POST['add'];
@@ -105,28 +106,18 @@
 
 		<form method="post" action="?page_id=530">
 		<table>	
-
-
 			<?php  
-			$column= array("Project Title","Project Abstract","Edit","Delete","Add Collaborators");
+			// $column= array("Project Title","Project Abstract","Edit","Delete","Add Collaborators");
 			?>
 				<tr>
 					<?php 
 					foreach ($column as $value) {
 						?> 
-						<th><?php echo $value?></th>
+						<th><strong><?php echo $value?></strong></th>
 						<?php  
 					}
-
 					 ?>
-
-					<!-- <th>Project Title</th>
-					<th>Project Abstract</th>
-					<th>Edit</th>
-					<th>Delete</th>
-					<th>Add Collaborators</th> -->
 				</tr>
-
 		<?php  
 		foreach ($results as $obj)
 		{?>
@@ -159,18 +150,19 @@
 
 		<form method="post" action="?page_id=571">
 			<input type="hidden" name="id" value="<?php echo $id; ?>">
+			<h2><?php echo $_POST[0]->projectTitle;?></h2>
 
 			<?php if ($_POST['button_type'] == "add"): ?>
 			<label>Collaborator's Email</label><br>
+
 			<input type="text" name="collab_email" placeholder="Collaborator's Email"><br>
 			<button type="submit" name="confirm" value="<?php echo $_POST[0]->id; ?>">Confirm</button>
 			<button type="submit" name="cancel" value="<?php echo $_POST[0]->id; ?>">Cancel</button>
 
 			<?php elseif ($_POST['button_type'] == "delete"): ?>
-			<label>Are you sure you want to delete??</label><br>
+			<label>Are you sure you want to delete <?php echo $_POST[0]->projectTitle;?>?</label><br>
 			<button type="submit" name="confirmDel" value="<?php echo $_POST[0]->id; ?>">Yes!</button>
 			<button type="submit" name="cancel" value="<?php echo $_POST[0]->id; ?>">No</button>
-
 
 			<?php else: ?>
 			<label>Email</label><br>
@@ -182,26 +174,35 @@
 			<label>Project Abstract</label><br>
 			<input type="text" name="projectAbstract" value="<?php echo $_POST[0]->projectAbstract;?>" placeholder="Project Abstract"><br>
 
+			<label> How many Concordia student authors contributed to this presentation? </label><br>
+			<input type="number" name="authornumber" value="" min="1" max="50"><br>
 
+			<label> Make sure all student authors have registered with URSCA by clicking the Login button in the top banner before proceeding. Enter all student author names below. If you need to enter more author/presenter names, please do so at the end of this survey. </label><br>
+			<input type="text"><br>
+
+			<label> How many faculty or staff mentored this project? (affiliated with Concordia or another institution) </label><br>
+			<input type="number" name="mentornumber" min="1" max="10"><br>
+
+		<label> Please provide a concise, descriptive title for your project. Be sure to include any necessary formatting and symbols. </label><br>
+			<input type="text"><br><br>
+
+	    <label><input type="checkbox" name="acceptanceabstract" value="1" >By clicking this box, you are providing permission to include your abstract in the COSS program.</label><br>
+			
 			<!--  <textarea name='projectAbstract' placeholder="Your Abstract"> <?php //echo $_POST[0]->projectAbstract;?> </textarea><br>  -->
 
 		
 			<?php if ($_POST['button_type'] == "edit"): 
-				//press("update");
-				update();
-				?>
-
-				<!-- <button type="submit" name="update" value="<?php echo $_POST[0]->id; ?>">Update</button> -->
-				<button type="submit" name="cancel" value="<?php echo $_POST[0]->id; ?>">Cancel</button>
-
-			<?php else: ?>
-				<button type="submit" name="save" value="<?php echo $_POST[0]->id; ?>">Save</button>
-			<?php endif ?>
+				press("update","Update");
+				press("cancel","Cancel");	
+				
+				 else: 
+				press("save","Save");
+				press("cancel","Cancel");
+				
+				 endif ?>
 			<?php endif ?>
 		</form>
-	
 		<?php  
-
 	}
 	add_shortcode('project_information_contact_form','project_information_form');
 
@@ -214,10 +215,9 @@
 	add_shortcode('add_project_button','add_new_project');
 
 
-	function update(){
+	function press($name, $button_name){
 		?>
-		<button type="submit" name="update" value="<?php echo $_POST[0]->id; ?>">Update</button>
+		<button type="submit" name="<?php echo "$name";  ?>" value="<?php echo $_POST[0]->id; ?>"><?php echo "$button_name";  ?></button>
 		<?php 
 	}
-
 	?>
