@@ -172,8 +172,6 @@ $column= array("Project Title","Project Abstract","Edit","Delete","Add Collabora
 			<input type="text"><br><br>
 
 	    <label><input type="checkbox" name="acceptanceabstract" value="1" >By clicking this box, you are providing permission to include your abstract in the COSS program.</label><br>
-			
-			<!--  <textarea name='projectAbstract' placeholder="Your Abstract"> <?php //echo $_POST[0]->projectAbstract;?> </textarea><br>  -->
 
 			<?php if ($_POST['button_type'] == "edit"): 
 				press("update","Update");
