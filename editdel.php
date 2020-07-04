@@ -173,12 +173,9 @@ else{
 			press("cancel","Cancel");
 
 		elseif ($_POST['button_type'] == "view"):
-			var_dump($_POST);
-			 ?>
-
-			<label><?php echo $_POST[0]->email;?></label><br>
-			<label><?php echo $_POST[1]->email;?></label><br>
-			<?php 
+				for ($x = 0; $x <= 10; $x++) {
+				 ?> <label><?php echo $_POST[$x]->email;?></label><br><?php 
+				}
 			
 			press("cancel","Go Back");
 			 
