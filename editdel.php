@@ -151,14 +151,13 @@ $column= array("Project Title","Project Abstract","Edit","Delete","Add Collabora
 			press("cancel","No");
 
 			 else: ?>
-			<label>Email</label><br>
-			<input type="text" name="email" value="<?php echo $email ?>" placeholder="<?php echo $email; ?>"><br>
+			<input type="hidden" name="email" value="<?php echo $email ?>" placeholder="<?php echo $email; ?>"><br>
 
 			<label>Project Title</label><br>
 			<input type="text" name="projectTitle" value="<?php echo $_POST[0]->projectTitle;?>" placeholder="Project Title"><br>
 
 			<label>Project Abstract</label><br>
-			<input type="text" name="projectAbstract" value="<?php echo $_POST[0]->projectAbstract;?>" placeholder="Project Abstract"><br>
+			  <?php wp_editor( $_POST[0]->projectAbstract , 'projectAbstract', $settings = array('projectAbstract'=>'projectAbstract') ); ?> 
 
 			<label> How many Concordia student authors contributed to this presentation? </label><br>
 			<input type="number" name="authornumber" value="" min="1" max="50"><br>
