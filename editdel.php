@@ -17,6 +17,7 @@
 <?php  
 
 $column= array("Project Title","Project Abstract","Edit","Delete","Add Collaborators");
+$results = $wpdb->get_results(" SELECT project_information.id, project_information.projectTitle, project_information.projectAbstract FROM project_information INNER JOIN user_information ON project_information.id=user_information.project_id WHERE user_information.email='$current_user->user_email'");
 	
 	global $wpdb; 
 
@@ -94,7 +95,7 @@ $column= array("Project Title","Project Abstract","Edit","Delete","Add Collabora
 		}
 
 
-	$results = $wpdb->get_results(" SELECT project_information.id, project_information.projectTitle, project_information.projectAbstract FROM project_information INNER JOIN user_information ON project_information.id=user_information.project_id WHERE user_information.email='$current_user->user_email'");
+	
 		?>
 
 		<form method="post" action="?page_id=530">
