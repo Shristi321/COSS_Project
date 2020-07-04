@@ -14,10 +14,14 @@
 	$button_type = "";
 	?>
 
+
+
 <?php  
 
-$column= array("Project Title","Project Abstract","Edit","Delete","Add Collaborators");
-$results = $wpdb->get_results(" SELECT project_information.id, project_information.projectTitle, project_information.projectAbstract FROM project_information INNER JOIN user_information ON project_information.id=user_information.project_id WHERE user_information.email='$current_user->user_email'");
+
+
+// $column= array("Project Title","Project Abstract","Edit","Delete","Add", "View");
+
 	
 	global $wpdb; 
 
@@ -94,14 +98,37 @@ $results = $wpdb->get_results(" SELECT project_information.id, project_informati
 			$_POST = array_merge($_POST,$add); 	
 		}
 
+		if (isset($_POST['view'])) {
+			$id = $_POST['view'];
+			$_POST['button_type']= "view";
+			$view = $wpdb->get_results("SELECT * FROM user_information WHERE project_id=$id");
+			
+			$_POST = array_merge($_POST,$view); 	
+		}
 
-	
+
+if($current_user->user_email=="chapagains261@gmail.com"||$current_user->user_email=="alice@cord.edu"){
+	$results=$wpdb->get_results(" SELECT project_information.id, project_information.projectTitle, project_information.projectAbstract FROM project_information INNER JOIN user_information ON project_information.id=user_information.project_id ");
+}
+else{
+	$results = $wpdb->get_results(" SELECT project_information.id, project_information.projectTitle, project_information.projectAbstract FROM project_information INNER JOIN user_information ON project_information.id=user_information.project_id WHERE user_information.email='$current_user->user_email'");
+}
 		?>
 
 		<form method="post" action="?page_id=530">
 			<table>	
 				<tr>
 					<?php 
+					$column= array("Project Title","Project Abstract","Edit","Delete","Add", "View");
+
+
+					if($current_user->user_email=="chapagains261@gmail.com"||$current_user->user_email=="alice@cord.edu"){
+						$column= array("Project Title","Project Abstract","Edit","Delete","Add", "View");
+					}
+					else{
+						$column= array("Project Title","Project Abstract","Edit","Delete","Add");
+					}
+
 					foreach ($column as $value) {?> 
 					<th><strong><?php echo $value?></strong></th>
 					<?php }	 ?>		
@@ -115,6 +142,7 @@ $results = $wpdb->get_results(" SELECT project_information.id, project_informati
 					<td><a><button name="edit" value= "<?php echo $obj->id; ?>">Edit</button></a></td>
 					<td><a><button name="delete" value= "<?php echo $obj->id; ?>">Delete</button></a></td>
 					<td><a><button name="add" value= "<?php echo $obj->id; ?>">Add</button></a></td>
+					<td><a><button name="view" value= "<?php echo $obj->id; ?>">View</button></a></td>
 				</tr>
 				<?php }?>
 
@@ -143,6 +171,16 @@ $results = $wpdb->get_results(" SELECT project_information.id, project_informati
 			<?php 
 			press("confirm","Confirm");
 			press("cancel","Cancel");
+
+		elseif ($_POST['button_type'] == "view"):
+			var_dump($_POST);
+			 ?>
+
+			<label><?php echo $_POST[0]->email;?></label><br>
+			<label><?php echo $_POST[1]->email;?></label><br>
+			<?php 
+			
+			press("cancel","Go Back");
 			 
 			 elseif ($_POST['button_type'] == "delete"):
 			 ?>
