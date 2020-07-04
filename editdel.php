@@ -176,7 +176,6 @@ else{
 				for ($x = 0; $x <= 10; $x++) {
 				 ?> <label><?php echo $_POST[$x]->email;?></label><br><?php 
 				}
-			
 			press("cancel","Go Back");
 			 
 			 elseif ($_POST['button_type'] == "delete"):
